@@ -2,10 +2,17 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv').config()
-const Port = process.env.PORT
+const Port = process.env.PORT || 8000
 const app = express()
+const cors = require('cors')
 const { Configuration, OpenAIApi} = require('openai')
-
+// app.use(cors({
+//   origin: 'https://gptclon.onrender.com',
+//   methods:['GET','POST'],
+//   allowedHeaders: ['Content-Type'],
+//   credentials:true,  
+// }))
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 // parse application/json
