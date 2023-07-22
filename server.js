@@ -5,6 +5,7 @@ const dotenv = require('dotenv').config()
 const Port = process.env.PORT || 8000
 const app = express()
 const cors = require('cors')
+const os = require('os');
 const { Configuration, OpenAIApi} = require('openai')
 // app.use(cors({
 //   origin: 'https://gptclon.onrender.com',
@@ -22,11 +23,11 @@ app.use(bodyParser.json())
 const configuration = new Configuration({
   apiKey: process.env.URI_KEY,
 });
-
+const openai = new OpenAIApi(configuration);
 
 app.post('/text',async (req,res)=>{
  
-const openai = new OpenAIApi(configuration);
+
 const response = await openai.createCompletion({
   model: "text-davinci-003",
   prompt:req.body.prompt,
@@ -38,13 +39,18 @@ const response = await openai.createCompletion({
 res.json(response.data.choices[0].text)
 })
 
-app.get('/image',async(req,res)=>{
+app.post('/image',async(req,res)=>{
+// console.log(os.networkInterfaces())
+
     const response = await openai.createImage({
-        prompt: "A cute baby sea otter",
-        n: 2,
-        size: "1024x1024",
+        prompt:req.body.prompt,
+        n:3,
+        size: "512x512",
       });
+      res.json(response.data.data)
 })
+
+
 
 app.listen(Port,()=>{
     console.log('listening...',Port)
